@@ -21,4 +21,4 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python3 scan-tf.py
+          python3 scan_tf.py
