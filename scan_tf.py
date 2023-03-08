@@ -1,39 +1,29 @@
 import openai
 import os
 
-# Set the API key
+# set the OpenAI API key
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
-# Set the prompt
-prompt = "Scan the Terraform files and code in the GitHub repository for AWS Foundations best practices."
+# create the prompt for the completion
+prompt = (f"Please review the following Terraform files and identify any security issues:\n\n"
+          f"{open('main.tf', 'r').read()}\n\n"
+          f"{open('variables.tf', 'r').read()}\n\n"
+          f"{open('outputs.tf', 'r').read()}")
 
-# Get the file paths recursively
-file_paths = []
-for root, dirs, files in os.walk('.'):
-    for file in files:
-        if file.endswith('.tf'):
-            file_paths.append(os.path.join(root, file))
+# set the engine and model IDs for the OpenAI API
+engine = "davinci-codex"
+model = "davinci-codex-002"
 
-# Read the files
-code = ''
-for file_path in file_paths:
-    with open(file_path) as f:
-        code += f.read()
-
-# Call the GPT-3 API
+# create the completion request
 response = openai.Completion.create(
-    engine="davinci-codex",
+    engine=engine,
+    model=model,
     prompt=prompt,
     max_tokens=1024,
     n=1,
-    temperature=0.7,
     stop=None,
-    timeout=60,
-    documents=[code]
+    temperature=0.7,
 )
 
-# Get the response
-result = response.choices[0].text
-
-# Print the results
-print(result)
+# print the response
+print(response.choices[0].text)
