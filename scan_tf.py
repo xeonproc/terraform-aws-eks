@@ -29,5 +29,5 @@ for root, dirs, files in os.walk("/"):
 
 # Prompt OpenAI to scan the Terraform files for AWS foundational best practices
 prompt = "Please scan the Terraform files for AWS foundational best practices."
-message = generate_text(prompt, files=terraform_files)
+message = generate_text(prompt, terraform_files)
 print(message)
