@@ -1,5 +1,7 @@
 import openai
 import os
+import gensim
+from gensim.summarization import summarize
 
 # Fetch the API key from the environment variable
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -24,7 +26,9 @@ for root, dirs, files in os.walk("/"):
         if filename.endswith(".tf"):
             file_path = os.path.join(root, filename)
             with open(file_path, "r") as f:
-                terraform_files.append(f.read())
+                text = f.read()
+                summary = summarize(text, ratio=0.2, word_count=100)
+                terraform_files.append(summary)
 
 # Prompt OpenAI to scan the Terraform files for AWS foundational best practices
 prompt = "Please scan the following Terraform files for AWS foundational best practices:\n\n" + "\n".join(terraform_files)
