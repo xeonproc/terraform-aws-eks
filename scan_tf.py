@@ -1,6 +1,6 @@
 import openai
 import os
-import glob
+import fnmatch
 
 # Set the API key
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -8,17 +8,23 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 # Set the prompt
 prompt = "Scan the Terraform files and code in the GitHub repository for AWS Foundations best practices."
 
-# Set the file path
-file_path = "./**/*.tf"
+# Set the root directory
+root_dir = "."
 
-# Read the files
-files = []
-for filename in glob.iglob(file_path, recursive=True):
-    with open(filename) as f:
-        files.append(f.read())
+# Set the file pattern to search for
+file_pattern = "*.tf"
 
-# Concatenate the files
-code = ''.join(files)
+# Find all files matching the pattern in the root directory and its subdirectories
+tf_files = []
+for root, dirnames, filenames in os.walk(root_dir):
+    for filename in fnmatch.filter(filenames, file_pattern):
+        tf_files.append(os.path.join(root, filename))
+
+# Read the files and concatenate the code
+code = ''
+for tf_file in tf_files:
+    with open(tf_file) as f:
+        code += f.read()
 
 # Call the GPT-3 API
 response = openai.Completion.create(
@@ -29,7 +35,7 @@ response = openai.Completion.create(
     temperature=0.7,
     stop=None,
     timeout=60,
-    file=code
+    text=code
 )
 
 # Get the response
