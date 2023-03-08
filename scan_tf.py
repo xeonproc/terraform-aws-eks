@@ -1,34 +1,36 @@
-import openai_secret_manager
+import openai
 import os
-import requests
-import json
 
-OPENAI_API_KEY = openai_secret_manager.get_secret("openai_api_key")["api_key"]
-headers = {
-    'Content-Type': 'application/json',
-    'Authorization': f'Bearer {OPENAI_API_KEY}',
-}
+# Set the API key
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
-# Prompt for the OpenAI API
-prompt = "Please scan this Terraform codebase for AWS Foundational Best Practices compliance issues.\n\n"
-file_path = '.'
-for subdir, dirs, files in os.walk(file_path):
-    for file in files:
-        if file.endswith('.tf'):
-            full_path = os.path.join(subdir, file)
-            with open(full_path, 'r') as f:
-                code = f.read()
-                prompt += f"File: {full_path}\n"
-                prompt += f"{code}\n\n"
+# Set the prompt
+prompt = "Scan the Terraform files and code in the GitHub repository for AWS Foundations best practices."
 
-data = {
-  'prompt': prompt,
-  'temperature': 0.5,
-  'max_tokens': 1024,
-  'n': 1,
-  'stop': ">>>>"
-}
+# Set the file path
+file_path = "."
 
-response = requests.post('https://api.openai.com/v1/engines/davinci-codex/completions', headers=headers, json=data)
-completions = response.json()['choices'][0]['text'].strip()
-print(completions)
+# Read the files
+with open(file_path) as f:
+    files = f.readlines()
+
+# Concatenate the files
+code = ''.join(files)
+
+# Call the GPT-3 API
+response = openai.Completion.create(
+    engine="davinci-codex",
+    prompt=prompt,
+    max_tokens=1024,
+    n=1,
+    temperature=0.7,
+    stop=None,
+    timeout=60,
+    file=code
+)
+
+# Get the response
+result = response.choices[0].text
+
+# Print the results
+print(result)
