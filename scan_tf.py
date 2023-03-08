@@ -1,5 +1,6 @@
 import openai
 import os
+import glob
 
 # Set the API key
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -8,11 +9,13 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 prompt = "Scan the Terraform files and code in the GitHub repository for AWS Foundations best practices."
 
 # Set the file path
-file_path = "."
+file_path = "./**/*.tf"
 
 # Read the files
-with open(file_path) as f:
-    files = f.readlines()
+files = []
+for filename in glob.iglob(file_path, recursive=True):
+    with open(filename) as f:
+        files.append(f.read())
 
 # Concatenate the files
 code = ''.join(files)
