@@ -16,7 +16,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip install openai
-          pip install openai openai_secret_manager
+          pip install openai_secret_manager
 
       - name: Scan Terraform files using OpenAI
         env:
