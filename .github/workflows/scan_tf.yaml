@@ -22,3 +22,9 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python3 scan_tf.py
+          
+      - name: Upload output as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: scan-output
+          path: output.txt
