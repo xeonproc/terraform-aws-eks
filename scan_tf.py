@@ -1,3 +1,5 @@
+#script to scan tf in repo using AFBP
+
 import openai
 import os
 import re
