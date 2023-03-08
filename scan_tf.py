@@ -10,7 +10,7 @@ def generate_text(prompt):
     completions = openai.Completion.create(
         engine="davinci",
         prompt=prompt,
-        max_tokens=60,
+        max_tokens=40,
         n=1,
         stop=None,
         temperature=0.5,
@@ -26,10 +26,13 @@ for root, dirs, files in os.walk("/"):
             file_path = os.path.join(root, filename)
             with open(file_path, "r") as f:
                 text = f.read()
-                # Split the text into sentences
-                sentences = re.split(r'(?<=[^A-Z].[.?]) +(?=[A-Z])', text)
-                # Select a subset of the most important sentences
-                summary = ". ".join(sentences[:len(sentences)//5])
+                # Split the text into smaller chunks
+                prompt_chunks = re.findall(r'.{1,500}', text)
+                # Generate completions for each chunk
+                completions = []
+                for chunk in prompt_chunks:
+                    completions.append(generate_text(chunk))
+                summary = ". ".join(completions)
                 terraform_files.append(summary)
 
 # Prompt OpenAI to scan the Terraform files for AWS foundational best practices
