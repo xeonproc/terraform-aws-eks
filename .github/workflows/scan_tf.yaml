@@ -1,4 +1,4 @@
-name: Terraform Scan
+name: Terraform scan using OpenAI API
 
 on:
   push:
@@ -9,14 +9,16 @@ jobs:
   scan-terraform:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-    - name: Scan Terraform files
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: python scan_tf.py
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install openai
+
+      - name: Scan Terraform files using OpenAI
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python3 scan-tf.py
