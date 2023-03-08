@@ -16,15 +16,17 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip install openai
-
+      
       - name: Scan Terraform files using OpenAI
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python3 scan_tf.py
-          
+          mkdir scan_output
+          python3 scan_tf.py > scan_output/output.txt
+
       - name: Upload output as artifact
+        if: success()
         uses: actions/upload-artifact@v2
         with:
           name: scan-output
-          path: output.txt
+          path: scan_output
