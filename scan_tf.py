@@ -1,29 +1,44 @@
+import openai_secret_manager
 import openai
 import os
+import sys
 
-# set the OpenAI API key
-openai.api_key = os.environ["OPENAI_API_KEY"]
+def get_openai_key():
+    return openai_secret_manager.get_secret("openai")["api_key"]
 
-# create the prompt for the completion
-prompt = (f"Please review the following Terraform files and identify any security issues:\n\n"
-          f"{open('main.tf', 'r').read()}\n\n"
-          f"{open('variables.tf', 'r').read()}\n\n"
-          f"{open('outputs.tf', 'r').read()}")
+def scan_terraform():
+    # set up OpenAI API credentials
+    openai.api_key = get_openai_key()
 
-# set the engine and model IDs for the OpenAI API
-engine = "davinci-codex"
-model = "davinci-codex-002"
+    # get repository name and owner
+    repo_name = os.environ["GITHUB_REPOSITORY"]
+    repo_owner = repo_name.split("/")[0]
 
-# create the completion request
-response = openai.Completion.create(
-    engine=engine,
-    model=model,
-    prompt=prompt,
-    max_tokens=1024,
-    n=1,
-    stop=None,
-    temperature=0.7,
-)
+    # get list of Terraform files in repository
+    terraform_files = []
+    for root, dirs, files in os.walk("."):
+        for file in files:
+            if file.endswith(".tf"):
+                terraform_files.append(os.path.join(root, file))
 
-# print the response
-print(response.choices[0].text)
+    # scan each Terraform file for AWS best practices issues using OpenAI
+    for file in terraform_files:
+        with open(file, "r") as f:
+            contents = f.read()
+            prompt = f"Scan the {file} file from the {repo_owner}/{repo_name} repository for AWS foundational best practices issues."
+            response = openai.Completion.create(
+                engine="text-davinci-002",
+                prompt=prompt,
+                temperature=0.5,
+                max_tokens=1024,
+                n=1,
+                stop=None,
+                timeout=60,
+            )
+            best_practices_issues = response.choices[0].text.strip()
+
+            # print the results to the console
+            print(f"Results for {file}:\n{best_practices_issues}\n")
+
+if __name__ == "__main__":
+    scan_terraform()
