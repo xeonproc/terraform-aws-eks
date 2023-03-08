@@ -5,7 +5,7 @@ import os
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # Use the OpenAI API as before
-def generate_text(prompt, files):
+def generate_text(prompt):
     completions = openai.Completion.create(
         engine="davinci",
         prompt=prompt,
@@ -13,7 +13,6 @@ def generate_text(prompt, files):
         n=1,
         stop=None,
         temperature=0.5,
-        files=files
     )
     message = completions.choices[0].text.strip()
     return message
@@ -28,6 +27,6 @@ for root, dirs, files in os.walk("/"):
                 terraform_files.append(f.read())
 
 # Prompt OpenAI to scan the Terraform files for AWS foundational best practices
-prompt = "Please scan the Terraform files for AWS foundational best practices."
-message = generate_text(prompt, terraform_files)
+prompt = "Please scan the following Terraform files for AWS foundational best practices:\n\n" + "\n".join(terraform_files)
+message = generate_text(prompt)
 print(message)
