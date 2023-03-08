@@ -21,12 +21,15 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          mkdir scan_output
-          python3 scan_tf.py > scan_output/output.txt
+          python3 scan_tf.py | tee scan_output.txt
+
+      - name: Print output to console
+        if: always()
+        run: cat scan_output.txt
 
       - name: Upload output as artifact
         if: success()
         uses: actions/upload-artifact@v2
         with:
           name: scan-output
-          path: scan_output
+          path: scan_output.txt
