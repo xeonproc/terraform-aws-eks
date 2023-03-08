@@ -16,7 +16,6 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip install openai
-          pip install gensim==3.8.3
 
       - name: Scan Terraform files using OpenAI
         env:
