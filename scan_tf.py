@@ -40,4 +40,6 @@ summary = ". ".join(completions)
 # Prompt OpenAI to scan the main.tf file for AWS foundational best practices
 prompt = "Please scan the following Terraform file for AWS foundational best practices:\n\n" + main_tf_path
 message = generate_text(prompt)
+
+# Print the result of the scan to the console
 print(message)
