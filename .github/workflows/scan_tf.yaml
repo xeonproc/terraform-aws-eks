@@ -20,7 +20,7 @@ jobs:
       
       - name: Scan Terraform files using OpenAI
         env:
-          GITHUB_PAT: ${{ secrets.GITHUB_PAT }} # Replace with the name of your secret
+          GH_PAT: ${{ secrets.GH_PAT }} # Replace with the name of your secret
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} # Replace with the name of your secret
         run: |
           python3 scan_tf.py | tee scan_output.txt
