@@ -20,11 +20,14 @@ jobs:
       
       - name: Scan Terraform files using OpenAI
         env:
-          xeonproc_pat: ${{ secrets.xeonproc_pat }} # Replace with the name of your secret
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} # Replace with the name of your secret
+          xeonproc_pat: ${{ secrets.xeonproc_pat }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python3 scan_tf.py | tee scan_output.txt
 
+      - name: Print GitHub access token
+        run: echo ${{ secrets.xeonproc_pat }}
+        
       - name: Print output to console
         if: always()
         run: cat scan_output.txt
