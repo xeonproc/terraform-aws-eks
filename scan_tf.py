@@ -6,6 +6,7 @@ from github import Github
 # Set up the OpenAI API
 openai.api_key = os.environ["OPENAI_API_KEY"]
 github_pat = os.environ["GH_PAT"]
+g = Github(github_pat)
 
 # Get the repository you want to analyze
 repo = g.get_repo("xeonproc/terraform-aws-eks")
