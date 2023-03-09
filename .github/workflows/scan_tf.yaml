@@ -16,10 +16,12 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip install openai
+          pip install PyGithub
       
       - name: Scan Terraform files using OpenAI
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GH_PAT: ${{ secrets.GITHUB_PAT }}
         run: |
           python3 scan_tf.py | tee scan_output.txt
 
