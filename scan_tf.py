@@ -20,7 +20,7 @@ for file in files:
     contents = repo.get_contents(file).decoded_content
     
     # Analyze the contents using the OpenAI API
-    prompt = "If the filename has an extension of .tf, report any compliance issues otherwise skip to the next file."
+    prompt = "If {contents.decode()} has an extension of .tf, report any compliance issues otherwise do not provide a response."
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=prompt,
