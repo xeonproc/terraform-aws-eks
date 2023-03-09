@@ -21,7 +21,7 @@ jobs:
       - name: Scan Terraform files using OpenAI
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          GH_PAT: ${{ secrets.secrets.xeonproc_pat }}
+          GH_PAT: ${{ secrets.secrets.GH_PAT }}
         run: |
           python3 scan_tf.py | tee scan_output.txt
 
