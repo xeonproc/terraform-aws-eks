@@ -26,7 +26,7 @@ jobs:
           python3 scan_tf.py | tee scan_output.txt
 
       - name: Print GitHub access token
-        run: echo ${{ secrets.xeonproc_pat }}
+        run: echo "${{ secrets.xeonproc_pat }}"
         
       - name: Print output to console
         if: always()
