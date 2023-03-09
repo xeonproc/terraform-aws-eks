@@ -1,4 +1,4 @@
-# Set up OpenAI API key
+# Set up OpenAI API key YEs
 import openai
 import os
 from github import Github
