@@ -20,18 +20,11 @@ jobs:
       
       - name: Scan Terraform files using OpenAI
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          GH_PAT: ${{ secrets.secrets.GH_PAT }}
+          GITHUB_PAT: ${{ secrets.xeonproc_pat }} # Replace with the name of your secret
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} # Replace with the name of your secret
         run: |
           python3 scan_tf.py | tee scan_output.txt
 
       - name: Print output to console
         if: always()
         run: cat scan_output.txt
-
-      - name: Upload output as artifact
-        if: success()
-        uses: actions/upload-artifact@v2
-        with:
-          name: scan-output
-          path: scan_output.txt
