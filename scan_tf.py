@@ -5,7 +5,7 @@ from github import Github
 
 # Set up the OpenAI API
 openai.api_key = os.environ["OPENAI_API_KEY"]
-github_pat = os.environ["GH_PAT"]
+github_pat = os.environ["xeonproc_pat"]
 g = Github(github_pat)
 
 # Get the repository you want to analyze
