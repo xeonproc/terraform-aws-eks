@@ -20,7 +20,7 @@ for file in files:
     contents = repo.get_contents(file).decoded_content
     
     # Analyze the contents using the OpenAI API
-    prompt = "If {contents.decode()} has an extension of .tf, report any compliance issues otherwise do not provide a response."
+    prompt = prompt =  f"What is the summary of the contents of {file}? Do you see terraform code in this file? If so what is this filing performing and what security issues, risks or vulnerabilities do you see in the code? Include the code snippets that are vulnerable."
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=prompt,
