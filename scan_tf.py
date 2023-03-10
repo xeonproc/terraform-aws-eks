@@ -22,7 +22,7 @@ for file in files:
     # Analyze the contents using the OpenAI API
     prompt = prompt =  f"What is the summary of the contents of {file}? Do you see terraform code in this file? If so what is this file doing and what security issues, risks or vulnerabilities do you see in the code? Include the code snippets that are vulnerable and use aws foundational best practices to guide your search of the terraform code."
     response = openai.Completion.create(
-        engine="text-davinci-002",
+        engine="text-babbage-001",
         prompt=prompt,
         max_tokens=1024,
         n=1,
